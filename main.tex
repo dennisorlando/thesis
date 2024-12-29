@@ -5,8 +5,8 @@
 \usepackage[
   paperheight=29.7cm,
   paperwidth=21cm,
-  outer=1.5cm,
-  inner=2.5cm,
+  outer=2.5cm,
+  inner=3.5cm,
   top=2cm,
   bottom=2cm
 ]{geometry}
@@ -38,32 +38,14 @@
 \usepackage{lipsum}
 % END: DELETE ME
 
+\setlength{\textwidth}{85ex}
+
 % Document
 \begin{document}
   % Cover
   \pagenumbering{gobble}
-  \input{etc/cover}
-  \clearpage
 
-  % Acknowledgements
-  \input{etc/acknowledgements}
-  \clearpage
-  \pagestyle{plain}
-
-  % Table of Contents
-  \frontmatter
-  \pagenumbering{Roman}
-  \tableofcontents
-  \clearpage
-  \begingroup
-  \pagestyle{empty}
-  \cleardoublepage
-  \endgroup
-
-  % Start page numbering
-  \mainmatter
-
-  % Group to define space between chapters
+  % Group to define space between s
   \begingroup
   % Override format of title chapter
   \titleformat{\chapter} {\normalfont\Huge\bfseries}{\thechapter}{1em}{} \titlespacing*{\chapter}{0pt}{0.59in}{0.02in}
@@ -71,24 +53,14 @@
   \titlespacing*{\subsubsection}{0pt}{0.05in}{0.02in}
 
   % Abstract
-  \input{etc/abstract.tex}
+  \input{etc/abstract_v2.tex}
+  
+  
+  
+  % Introduction
+  \input{etc/introduction.tex}
+  
+  % TODO
+  \input{etc/todo.tex}
 
-  % Chapters
-  \input{chapters/examples.tex}
-
-  % Conclusions
-  \input{etc/conclusions.tex}
-
-  \endgroup
-
-  % Bibliography
-  \addcontentsline{toc}{chapter}{Bibliography}
-  % Alphabetical order of authors
-  \bibliographystyle{plain}
-  \bibliography{bibliography.bib}
-
-  % Attachments
-  \titleformat{\chapter} {\normalfont\Huge\bfseries}{Appendix \thechapter}{1em}{}
-  \appendix
-  \input{attachments/attachment.tex}
 \end{document}

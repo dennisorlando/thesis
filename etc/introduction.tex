@@ -1,0 +1,34 @@
+\chapter{Introduction}
+\label{cha:introduction}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+
+As the world advances towards new Deep Learning technologies, modern supercomputers are increasingly equipped with multiple GPUs per node in order to address the computational and memory needs that such technologies require.\\
+These GPUs are nowadays often interconnected with high-speed technologies such as NVIDIA NVLink or AMD Infinity Fabric, which enable extremely fast data transfers between the different GPUs contained in a single node. \\
+While this high-bandwidth intra-node connectivity enhances the efficiency of overlapping communication in computation-bound problems (effectively masking communication costs), irregular problems, often characterized by unpredictable memory access patterns and communication dependencies, pose a significant challenge.\\
+In these scenarios, communication becomes the bottleneck, limiting the scalability and performance of even the most powerful supercomputers. Real-world applications involving large-scale graph processing, sparse matrix computations and certain machine learning algorithms often exhibit such irregular behavior. In fact, for these communication-bound problems, even the largest supercomputers in the world can achieve efficiencies as low as 4\% (as evidenced by benchmarks like HPCG in the Top500 list).
+
+Although new standards like Infiniband, Omni-Path, and 100Gbps+ Ethernet have significantly improved inter-node communication, a clear hierarchy remains for which the links that provide connectivity between multiple nodes are far slower then the intra-node links that connect multiple components (e.g. GPUs). \\
+As an instance, at the time of writing, the Leonardo supercomputer features NVLink 3.0, offering 300GB/s of intra-node, GPU-to-GPU bandwidth -- 12x the performance of it's Mellanox-based inter-node connectivity, which is limited to 25GB/s. \\
+It's likely that this form of communication hierarchy will remain in the future, with clusters of GPUs communicating more efficiently within a node than across nodes.\\
+This disparity necessitates algorithms and programs designed to effectively exploit this hierarchical communication structure, which is particularly important for such communication-bound, graph-based algorithms where the cost of exchanging data between nodes can easily dominate the overall execution time.
+
+This thesis project revolves around one of such algorithms, called "Macbeth", which is the result of a research project conducted in collaboration with Prof. F. Vella and Dr. L. Pichetti as part of the "Hicrest Laboratory" at the Department of Computer Science and Information Engineering at the University of Trento.
+
+"Macbeth" is a multi-node and multi-GPU scalable algorithm that extends Bader's Algorithm to calculate approximated Betweenness Centrality scores for each vertex of a graph\\
+Bader's algorithm works by performing a Breath-first-search (BFS) on each vertex of a graph, while
+"Betweenness Centrality", from here on referred to as "BC", is a metric which evaluates the "importance" of a vertex in a graph, which is useful in fields like social network or road traffic analysis. \\
+"Macbeth" approximates such algorithm by performing BFSs only on a subset of the vertices, while also employing two parallelization techniques which enable it to A) handle arbitrarily large graphs, by partitioning the adjacency matrix of a graph across a grid of GPUs, and B) to efficiently scale the performance by concurrently executing multiple BFSs over multiple grids of GPUs.\\
+The independent sample is selected based on different distributions (heuristics) with probabilities that can dynamically change during the execution of the algorithm. As an example, one of such heuristics selects a sample based on the approximated BC scores of the vertices, which slowly converges toward the true BC scores of the vertices after each executed BFS.
+
+This document will provide a throughout description of "Macbeth" followed by the contributions of the author regarding this project, which addressed the following challenges:
+\begin{enumerate}
+	\item \textbf{Optimizing intra-node and inter-node communications by exploiting modern interconnects}: 
+	by leveraging CUDA-aware OpenMPI, the program was enabled to automatically use the fastest link between GPUs in data movement. This can greatly facilitate the rapid exchange of partial BFS results when technologies such as NVLink are present, while automatic integration with inter-node standards e.g. Infiniband is also beneficial. Results show an uplift in performance of up to 40\%. 
+	\item \textbf{Addressing the sampling challenges introduced by the two parallelization techniques}:
+	Macbeth's approximated and distributed nature introduces many challenges regarding synchronization. In particular, it was required to create a "weighted sampling without replacement, with dynamic weights" algorithm to generate a set of "informative" sources (vertices) from which to start the previously described BFSs.\\
+	The probability values employed in the sampling distribution are spread across multiple GPUs. Such complexity is exacerbated by the concurrent execution of multiple BFSs, which also requires an independent sample in order to avoid erroneously performing multiple BFSs from a single vertex.
+	
+\end{enumerate}
+
+Tests where conducted on the "Leonardo" supercomputer located in Bologna, which kindly provided access to up to 1024 high-end NVidia GPUs evenly spread across 256 computing nodes. 

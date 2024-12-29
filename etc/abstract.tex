@@ -1,5 +1,19 @@
 \chapter*{Abstract}
 \label{cha:abtract}
 \addcontentsline{toc}{chapter}{Abstract}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
 
-\lipsum[1]
+
+This thesis focuses on optimizing "Macbeth", which is a multi-node, multi-GPU distributed algorithm designed to compute approximated Betweenness Centrality scores for all the vertices of a graph. It employs two parallelization techniques which enable it to A) handle huge dataset dy distributing graphs across a grid of GPUs and B) to efficiently scale performance by parallelizing computations across multiple grids of GPUs.\\
+Such parallelization techniques necessitate different phases involving multiple GPU-to-GPU and node-to-node communications.
+
+This document describes the work conducted by the author as part of a Bachelor thesis project, which involved:
+\begin{itemize}
+	\item Optimizing the communication phases of "Macbeth" with the goal to better fit modern datacenter architectures, which often provide multiple computing nodes containing multiple GPUs. Such work was conducted by enabling "Macbeth" to leverage NVIDIA NVLink connectivity between GPUs. 
+	\item Optimizing the synchronization algorithm involved in betweenness centrality approximation, which utilizes sampling strategies with different distributions that can dynamically change during "Macbeth"'s execution and are distributed over multiple GPUs.
+\end{itemize}
+
+The performance impact of this work was tested on the Leonardo supercomputer which provided accesso to 256 nodes with 4 GPUs each, connected via NVIDIA NVLink interconnect for a total of up to 1024 high-end GPUs. 
+Results show an increase in performance of up to ~40\%.
+

@@ -1,0 +1,21 @@
+\chapter*{Abstract}
+\label{cha:abtract}
+\addcontentsline{toc}{chapter}{Abstract}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+
+
+Analyzing massive networks is crucial for understanding complex systems, from social interactions to biological processes. However, calculating key metrics like Betweenness Centrality (BC), which identifies influential nodes in a network, becomes computationally prohibitive for graphs with billions of edges. 
+
+This thesis revolves around "Macbeth", a distributed algorithm designed to approximate BC scores on a datacenter-level scale. It employs two parallelization techniques that enable it to A) handle huge datasets by distributing graphs across a grid of GPUs and B) to efficiently scale the performance by parallelizing computations across multiple grids of GPUs. \\
+Such parallelization strategy introduces performance bottlenecks due to the irregular nature of graph trasversal and the inherent complexity of its distributed approximation technique. This approximation, necessary for handling massive graphs, relies on sampling vertices from a dynamically changing probability distribution spread across multiple GPUs. 
+
+The communication requirements of Macbeth make it effectively communication-bound, and as a result Macbeth was designed with a key principle to confine most of the communications to fast intra-node links, capitalizing on high-bandwidth interconnects like NVIDIA NVLink or InfinityFabric.
+
+This thesis describes the work conducted by the author to tackle two optimization challenges, which involved:
+\begin{itemize}
+	\item \textbf{Decreasing the communication overhead of Macbeth:} by analyzing and re-architecting the data paths traversed by the algorithm, opportunities where found to exploit previously unused interconnects (e.g. NVIDIA NVLink) for higher transfer speeds. 
+	\item \textbf{Implementing an effective sampling algorithm:} Macbeth's distributed nature requires an algorithm that is capable of sampling a vertex from a dynamically-changing probability distribution which is partitioned among multiple GPUs. Challenges include a form of \textit{sampling without replacement} and sample broadcast. 
+\end{itemize}
+
+The impact of these optimizations was evaluated on the Leonardo supercomputer, which kindly offered access to up to 256 nodes with 4 GPUs each, interconnected by NVLink, for a total of 1024 high-end GPUs. The results demonstrated a significant performance improvement of up to ~40\%, empathizing the effectiveness of the implemented architecture-aware optimization in accelerating large-scale graph analysis.
