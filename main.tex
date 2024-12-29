@@ -55,7 +55,19 @@
   % Abstract
   \input{etc/abstract_v2.tex}
   
+  % Table of Contents
+  \frontmatter
+  \pagenumbering{arabic}
+  \tableofcontents
+  \clearpage
+  \begingroup
+  \pagestyle{empty}
+  \cleardoublepage
+  \endgroup
   
+  % reset messed up page numbering
+  % Start page numbering
+  \mainmatter
   
   % Introduction
   \input{etc/introduction.tex}
